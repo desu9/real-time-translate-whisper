@@ -1,0 +1,1 @@
+# whiper-vad-translate
