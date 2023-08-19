@@ -1,0 +1,11 @@
+openai-whisper
+opencc
+argparse
+numpy
+pyaudio
+webrtcvad
+halo
+wave
+pycryptodemo
+requests
+soundfile
