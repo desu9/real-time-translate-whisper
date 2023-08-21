@@ -1,6 +1,6 @@
 # Whisper-vad-translate
 
-This is a real-time translation system based on whisper model, vad speech activity recognition model and youdao translate.
+This is a real-time translation system based on whisper model, vad speech activity recognition model and youdao translate. 
 
 
 ## Setup
