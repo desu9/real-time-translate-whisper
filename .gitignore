@@ -10,3 +10,4 @@
 /processed.wav
 /speech.wav
 /__pycache__/
+.gitignore
