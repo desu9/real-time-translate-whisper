@@ -1,8 +1,8 @@
 import collections, queue
 import io
-import os
+import json,httpx
 import codecs
-import trans as translation
+import translate as translation
 import time
 import numpy as np
 import pyaudio
@@ -11,8 +11,11 @@ from halo import Halo
 import torch
 import torchaudio
 import wave
-import whistleapp as whistle
+import whisper_process as whisper
 #import fast_whisper
+
+
+
 class Audio(object):
     """Streams raw audio from microphone. Data is received in a separate thread, and stored in a buffer, to be read from."""
     FORMAT = pyaudio.paInt16
@@ -119,16 +122,19 @@ def device_choice(microphone):
     # 逐一查找声音设备
     if microphone:
         devInfo = p.get_default_input_device_info()
-        return devInfo
+        return devInfo['index']
     else:
         for i in range(p.get_device_count()):
-            devInfo = p.get_default_input_device_info()  # get_device_info_by_index(i)
+            devInfo = p.get_device_info_by_index(i)  # get_device_info_by_index(i)
             if devInfo['name'].find(target) >= 0 and devInfo['hostApi'] == 0:
                 print('已找到内录设备,序号是 ',i)
-                return devInfo
+                return i
 
 def start(ARGS):
     # Start audio with VAD
+
+    print(ARGS.microphone==True)
+    print(device_choice(ARGS.microphone))
     vad_audio = VADAudio(aggressiveness=ARGS.webRTC_aggressiveness,
                          device=device_choice(ARGS.microphone),
                          input_rate=ARGS.rate)
@@ -183,21 +189,41 @@ def start(ARGS):
                 # 清空字节数组和字节流
                 wav_data = bytearray()
                 stream = io.BytesIO()
-                text = whistle.process('./speech.wav')
-                # text = fast_whisper.fastReg('./speech.wav')
-                text = translation.tran(text)
-                print(text)
-                f = codecs.open("./configs/example.txt", "w", "utf-8")
-                # 向文件中写入字符串 "Hello, world!"
-                f.write(text)
-                # 关闭文件
-                f.close()
-                print(time.time())
-                # q.put(translation.tran(text))
+
+                lang,text = whisper.process('./speech.wav')
+                if lang == ARGS.language:
+                    print(text)
+                    text = translation.tran(text)
+                    #text = deepl(text,lang)
+                    print(text)
+                    # text = fast_whisper.fastReg('./speech.wav')
+                    # f = codecs.open("./configs/example.txt", "w", "utf-8")
+                    # # 向文件中写入字符串
+                    # f.write(text)
+                    # # 关闭文件
+                    # f.close()
+                    print(time.time())
             else:
                 print("detected a noise")
                 wav_data = bytearray()
                 stream = io.BytesIO()
+
+#
+# def deepl(text,lang):
+#     deeplx_api = "http://localhost:1188/translate"
+#     if lang == 'zh':
+#         langto = 'EN'
+#     data = {
+#         "text": text,
+#         "source_lang": lang,
+#         "target_lang": "ZH"
+#     }
+#
+#     post_data = json.dumps(data)
+#     r = httpx.post(url=deeplx_api, data=post_data).text
+#     data = json.loads(r)
+#
+#     return data['data']
 def save_wav(data, path):
     # 创建一个wav文件对象
     wf = wave.open(path, 'wb')
@@ -230,7 +256,7 @@ if __name__ == '__main__':
                         help="Set aggressiveness of webRTC: an integer between 0 and 3, 0 being the least aggressive about filtering out non-speech, 3 the most aggressive. Default: 3")
     parser.add_argument('--nospinner', action='store_true',
                         help="Disable spinner")
-    parser.add_argument('-d', '--device', type=int, default=None,
+    parser.add_argument('-d', '--device', type=int, default=2,
                         help="Device input index (Int) as listed by pyaudio.PyAudio.get_device_info_by_index(). If not provided, falls back to PyAudio.get_default_device().")
 
     parser.add_argument('-name', '--silaro_model_name', type=str, default="silero_vad",

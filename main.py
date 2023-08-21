@@ -11,8 +11,11 @@ if __name__ == '__main__':
                         help="Set aggressiveness of webRTC: an integer between 0 and 3, 0 being the least aggressive about filtering out non-speech, 3 the most aggressive. Default: 3")
     parser.add_argument('--nospinner', action='store_true',
                         help="Disable spinner")
-    parser.add_argument('-m', '--microphone', type=bool, default=True,
+    parser.add_argument('-m', '--microphone', type=int, default=0,
                         help="Device input index (Int) as listed by pyaudio.PyAudio.get_device_info_by_index(). If not provided, falls back to PyAudio.get_default_device().")
+    parser.add_argument('-l', '--language', type=str, default='ja',
+                    help="Device input index (Int) as listed by pyaudio.PyAudio.get_device_info_by_index(). If not provided, falls back to PyAudio.get_default_device().")
+
     parser.add_argument('-name', '--silaro_model_name', type=str, default="silero_vad",
                         help="select the name of the model. You can select between 'silero_vad',''silero_vad_micro','silero_vad_micro_8k','silero_vad_mini','silero_vad_mini_8k'")
     parser.add_argument('--reload', action='store_true',help="download the last version of the silero vad")

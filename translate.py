@@ -109,11 +109,16 @@ translater = YoudaoTranslater()
 def tran(text):
     try:
         # 尝试翻译文本
-        return translater.translate(text)['translateResult'][0][0]['tgt']
+        #print(translater.translate(text))
+        text = translater.translate(text)['translateResult'][0]
+        sentence = ""
+        for i in range(len(text)):
+            sentence = sentence+text[i]['tgt']
+        return sentence
     except Exception as e:
         # 如果发生任何异常，打印异常信息，并返回原文本
         print(e)
         return "我没听清"
 
 if __name__ == '__main__':
-    tran('見えるかな?')
+    print(tran('Now what are you doing? Is there a way to recycle it?'))
