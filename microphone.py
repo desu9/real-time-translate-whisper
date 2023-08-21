@@ -168,7 +168,7 @@ def start(ARGS):
         else:
             if spinner: spinner.stop()
             #print("webRTC has detected a possible speech")
-            print(time.time())
+            second = time.time()
             newsound= np.frombuffer(wav_data,np.int16)
             audio_float32=Int2Float(newsound)
             time_stamps =get_speech_ts(audio_float32, model)
@@ -202,7 +202,8 @@ def start(ARGS):
                     # f.write(text)
                     # # 关闭文件
                     # f.close()
-                    print(time.time())
+                    second = time.time() - second
+                    print('%.2f秒'%second)
             else:
                 print("detected a noise")
                 wav_data = bytearray()
