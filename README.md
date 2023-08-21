@@ -5,7 +5,7 @@ This is a real-time translation system based on whisper model, vad speech activi
 
 ## Setup
 
-We used Python 3.9.9 and [PyTorch](https://pytorch.org/) 1.13.1+cuda11.7. 
+We used Python 3.9 and [PyTorch](https://pytorch.org/) 1.13.1+cuda11.7. 
 
     pip install torch==1.13.1+cu117 torchvision==0.14.1+cu117 torchaudio==0.13.1 --extra-index-url https://download.pytorch.org/whl/cu117
     pip install -r requirements.txt
