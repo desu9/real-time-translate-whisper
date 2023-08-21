@@ -1,17 +1,18 @@
 # Whisper-vad-translate
+[**🌐English**](./README_EN.md)
 
-This is a real-time translation system based on whisper model, vad speech activity recognition model and youdao translate.
+这是一个基于whisper模型、vad语音活动识别模型和有道翻译的实时翻译系统。
 
 
-## Setup
+## 配置
 
-We used Python 3.9  and [PyTorch](https://pytorch.org/) 1.13.1+cuda11.7. 
+我们使用 Python 3.9  和 [PyTorch](https://pytorch.org/) 1.13.1+cuda11.7. 
 
     pip install torch==1.13.1+cu117 torchvision==0.14.1+cu117 torchaudio==0.13.1 --extra-index-url https://download.pytorch.org/whl/cu117
     pip install -r requirements.txt
 
 
-It also requires the command-line tool [`ffmpeg`](https://ffmpeg.org/) to be installed on your system, which is available from most package managers:
+它还需要在您的系统上安装命令行工具[' ffmpeg '](https://ffmpeg.org/)，它可以从大多数包管理器中获得:
 
 ```bash
 # on Ubuntu or Debian
@@ -30,17 +31,11 @@ choco install ffmpeg
 scoop install ffmpeg
 ```
 
-You may need [`rust`](http://rust-lang.org) installed as well, in case [tiktoken](https://github.com/openai/tiktoken) does not provide a pre-built wheel for your platform. If you see installation errors during the `pip install` command above, please follow the [Getting started page](https://www.rust-lang.org/learn/get-started) to install Rust development environment. Additionally, you may need to configure the `PATH` environment variable, e.g. `export PATH="$HOME/.cargo/bin:$PATH"`. If the installation fails with `No module named 'setuptools_rust'`, you need to install `setuptools_rust`, e.g. by running:
-
-```bash
-pip install setuptools-rust
-```
 
 
-## Available models and languages
+## 可用的模型和语言
 
-There are five model sizes, four with English-only versions, offering speed and accuracy tradeoffs. Below are the names of the available models and their approximate memory requirements and relative speed. 
-
+[**Whisper**](https://github.com/openai/whisper/)
 
 |  Size  | Parameters | English-only model | Multilingual model | Required VRAM | Relative speed |
 |:------:|:----------:|:------------------:|:------------------:|:-------------:|:--------------:|
@@ -50,26 +45,21 @@ There are five model sizes, four with English-only versions, offering speed and 
 | medium |   769 M    |    `medium.en`     |      `medium`      |     ~5 GB     |      ~2x       |
 | large  |   1550 M   |        N/A         |      `large`       |    ~10 GB     |       1x       |
 
-The `.en` models for English-only applications tend to perform better, especially for the `tiny.en` and `base.en` models. We observed that the difference becomes less significant for the `small.en` and `medium.en` models.
-
-Whisper's performance varies widely depending on the language. The figure below shows a WER (Word Error Rate) breakdown by languages of the Fleurs dataset using the `large-v2` model (The smaller the numbers, the better the performance). Additional WER scores corresponding to the other models and datasets can be found in Appendix D.1, D.2, and D.4. Meanwhile, more BLEU (Bilingual Evaluation Understudy) scores can be found in Appendix D.3. Both are found in [the paper](https://arxiv.org/abs/2212.04356). 
-
-![WER breakdown by language](https://raw.githubusercontent.com/openai/whisper/main/language-breakdown.svg)
 
 
 
-## Command-line usage
+## 命令行用法
 
-The following command will start transcribe speech:
+下面的命令将开始转录语音:
 
     python main.py
 
-The default setting (which selects the `medium` model) works well for transcribing. The default translation language is Japanese, and you can specify the language using the `--language`option:
+默认设置(选择“medium”模式)对转录效果很好。默认的翻译语言是日语，你可以使用'——language '选项指定语言:
 
     main.py --language en
     main.py -l en
 
-The default audio is system audio, if you want to record microphone input, enter the following command:
+默认为捕获系统音频，如果需要捕获麦克风输入，请输入如下命令:
 
     main.py -m 1
 
